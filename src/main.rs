@@ -8,14 +8,16 @@ use std::io::Read;
 
 struct WordList {
     words: Vec<String>,
-    wordCt: u32
+    wordCt: usize
 }
 
 impl WordList {
     // returns a random string from self.words
     fn randWord(&self) -> String {
-        let ndx: i32 = rand::random() % self.wordCt();
-        return words[ndx];
+        let ndx: usize = rand::random::<usize>() % self.wordCt;
+        // let rv: String = self.words[ndx];
+        // return rv;
+        return self.words[ndx].clone();
     }
 
     // generates a passphrase (3 words first letters capitalized)
@@ -35,7 +37,7 @@ impl WordList {
         let mut contents = String::new();
         file.read_to_string(&mut contents);
         let mut vec: Vec<String> = Vec::new();
-        let mut ct: u32 = 0;
+        let mut ct: usize = 0;
         for word in contents.lines(){
             vec.push(word.to_string());
             ct += 1;
@@ -52,7 +54,7 @@ impl WordList {
 
 
 fn main(){
-    let path = "test1.txt";
+    let path = "test1.txt".to_string();
 
     let testList = WordList::new(path);
     testList.dump();
