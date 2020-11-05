@@ -15,14 +15,20 @@ impl WordList {
     // returns a random string from self.words
     fn randWord(&self) -> String {
         let ndx: usize = rand::random::<usize>() % self.wordCt;
-        // let rv: String = self.words[ndx];
-        // return rv;
-        return self.words[ndx].clone();
+        // capitalizing first letter
+        let w = self.words[ndx].clone();
+        let rv = format!("{}{}", w[..1].to_string().to_uppercase(), w[1..].to_string()).to_string();
+        return rv;
     }
 
     // generates a passphrase (3 words first letters capitalized)
-    fn genPassphrase(&self){
+    fn genPassphrase(&self) -> String{
         let mut rv = String::new();
+        for i in 0..3{
+            let mut word = self.randWord();
+            rv += &word;
+        }
+        return rv;
     }
 
     // prints the word list to the screen for testing purposes
@@ -54,8 +60,13 @@ impl WordList {
 
 
 fn main(){
-    let path = "test1.txt".to_string();
+    let testPath = "test1.txt".to_string();
+    let path = "twl06.txt".to_string();
 
-    let testList = WordList::new(path);
-    testList.dump();
+    let testList = WordList::new(testPath);
+    let corpus = WordList::new(path);
+
+    for i in 0..10{
+        println!("{}", corpus.genPassphrase());
+    }
 }
