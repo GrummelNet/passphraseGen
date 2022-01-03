@@ -1,10 +1,31 @@
-extern crate rand;
+#![allow(non_snake_case)]
+#![allow(dead_code)]
+#![allow(unused_must_use)]
 
-// use rand::thread_rng;
-// use rand::Rng;
+extern crate rand;
+use text_io::read;
+
 use std::fs::File;
 use std::io::Read;
-// use std::error::Error;
+
+struct Password {
+    text: String,
+    wordCt: usize
+}
+
+impl Password {
+    fn len(&self) -> usize {
+        return self.text.len()
+    }
+    fn new(str: String, n: usize) -> Password {
+        let rv = Password {
+            text: str,
+            wordCt: n
+        };
+
+        return rv;
+    }
+}
 
 struct WordList {
     words: Vec<String>,
@@ -22,12 +43,23 @@ impl WordList {
     }
 
     // generates a passphrase (3 words first letters capitalized)
-    fn genPassphrase(&self) -> String{
-        let mut rv = String::new();
-        for i in 0..3{
-            let mut word = self.randWord();
-            rv += &word;
+    fn genPassphrase(&self) -> Password{
+        let mut phrase = String::new();
+        for _i in 0..3{
+            let word = self.randWord();
+            phrase += &word;
         }
+
+        let mut wordCt = 3;
+        // ensuring a suitable length passphrase
+        // 20 is a temp value
+        while phrase.len() < 20 {
+            let word = self.randWord();
+            phrase += &word;
+            wordCt = wordCt + 1;
+        }
+
+        let rv = Password::new(phrase, wordCt);
         return rv;
     }
 
@@ -36,6 +68,10 @@ impl WordList {
         for word in self.words.iter(){
             println!("{}", word);
         }
+    }
+
+    fn dumpStats(&self) {
+        println!("Number of words: \t{}", self.wordCt);
     }
 
     fn new(listFile: String) -> WordList {
@@ -58,15 +94,26 @@ impl WordList {
     }
 }
 
+// produces a list of 10 passphrases
+fn listOfTen(corpus: WordList){
+    //making a list of passphrases
+    let mut passes: Vec<Password> = Vec::new();
+    for _i in 0..30{
+        passes.push(corpus.genPassphrase());
+    }
+
+    for i in 0..30{
+        println!("[{}] {}", i, passes[i].text);
+    }
+}
 
 fn main(){
-    let testPath = "test1.txt".to_string();
-    let path = "twl06.txt".to_string();
+    // let testPath = "test1.txt".to_string();
+    let path = "/mnt/c/Users/Jared Cline/Documents/Projects/passphraseGen/twl06.txt".to_string();
 
-    let testList = WordList::new(testPath);
+    // let testList = WordList::new(testPath);
     let corpus = WordList::new(path);
 
-    for i in 0..10{
-        println!("{}", corpus.genPassphrase());
-    }
+    listOfTen(corpus);
+    // corpus.dumpStats();
 }
