@@ -17,6 +17,11 @@ impl Password {
     fn len(&self) -> usize {
         return self.text.len()
     }
+
+    // fn stats(&self) -> String {
+    //
+    // }
+
     fn new(str: String, n: usize) -> Password {
         let rv = Password {
             text: str,
