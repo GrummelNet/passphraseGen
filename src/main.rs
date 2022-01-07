@@ -5,7 +5,8 @@
 extern crate rand;
 use text_io::read;
 
-use std::fs::File;
+// use std::fs::File;
+use std::fs;
 use std::io::Read;
 
 struct Password {
@@ -52,7 +53,7 @@ impl WordList {
         let mut phrase = String::new();
         for _i in 0..3{
             let word = self.randWord();
-            phrase += &word;
+            phrase += &word
         }
 
         let mut wordCt = 3;
@@ -79,10 +80,9 @@ impl WordList {
         println!("Number of words: \t{}", self.wordCt);
     }
 
-    fn new(listFile: String) -> WordList {
-        let mut file = File::open(listFile).unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents);
+    fn new() -> WordList {
+        let mut contents = include_str!("test1.txt");
+        // let mut contents = include_str!("twl06.txt");
         let mut vec: Vec<String> = Vec::new();
         let mut ct: usize = 0;
         for word in contents.lines(){
@@ -113,11 +113,8 @@ fn listOfTen(corpus: WordList){
 }
 
 fn main(){
-    // let testPath = "test1.txt".to_string();
-    let path = "/mnt/c/Users/Jared Cline/Documents/Projects/passphraseGen/twl06.txt".to_string();
-
     // let testList = WordList::new(testPath);
-    let corpus = WordList::new(path);
+    let corpus = WordList::new();
 
     listOfTen(corpus);
     // corpus.dumpStats();
