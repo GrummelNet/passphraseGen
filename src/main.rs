@@ -19,9 +19,11 @@ impl Password {
         return self.text.len()
     }
 
-    // fn stats(&self) -> String {
-    //
-    // }
+    // currently returns the entropy given a
+    fn stats(&self) -> f64 {
+        let alph: f64 = 26.0;
+        return (self.text.len() as f64) * alph.log2();
+    }
 
     fn new(str: String, n: usize) -> Password {
         let rv = Password {
@@ -81,8 +83,8 @@ impl WordList {
     }
 
     fn new() -> WordList {
-        let mut contents = include_str!("test1.txt");
-        // let mut contents = include_str!("twl06.txt");
+        // let mut contents = include_str!("test1.txt");
+        let mut contents = include_str!("twl06.txt");
         let mut vec: Vec<String> = Vec::new();
         let mut ct: usize = 0;
         for word in contents.lines(){
@@ -108,7 +110,7 @@ fn listOfTen(corpus: WordList){
     }
 
     for i in 0..30{
-        println!("[{}] {}", i, passes[i].text);
+        println!("[{}] {}\t{}", i, passes[i].text, passes[i].stats());
     }
 }
 
