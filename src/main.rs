@@ -15,9 +15,13 @@ impl Password {
     }
 
     // currently returns the entropy given lowercase english letters
-    fn stats(&self) -> f64 {
-        let alph: f64 = 26.0;
-        return (self.text.len() as f64) * alph.log2();
+    fn stats(&self, wl: &WordList) -> (f64, f64, f64) {
+        // let alph: f64 = 26.0;
+        let lower = (self.text.len() as f64) * (26.0 as f64).log2();
+        let allEng = (self.text.len() as f64) * (52.0 as f64).log2();
+        let dict = (self.wordCt as f64) * (wl.wordCt as f64).log2();
+
+		return (lower, allEng, dict);
     }
 
     fn new(str: String, n: usize) -> Password {
@@ -100,7 +104,7 @@ fn listOfTen(corpus: WordList) {
     //making a list of passphrases
     let mut passes: Vec<Password> = Vec::new();
     let mut max: usize = 0;
-    for i in 0..10{
+    for i in 0..10 {
         passes.push(corpus.genPassphrase());
         if passes[i].len() > max {
             max = passes[i].len();
@@ -109,8 +113,9 @@ fn listOfTen(corpus: WordList) {
 
     // funky formatting for a table output
     println!("{ul}Num | {:41}| {:18}{res}", "Passphrase" , "Entropy " , ul="\x1B[4m", res="\x1B[24m");
-    for i in 0..10{
-        println!("[{}] | {:41}| {}", i, passes[i].text, passes[i].stats());
+    for i in 0..10 {
+		let stats = passes[i].stats(&corpus);
+        println!("[{}] | {:41}| {}", i, passes[i].text, stats.0); 
     }
 }
 
