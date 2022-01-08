@@ -3,11 +3,6 @@
 #![allow(unused_must_use)]
 
 extern crate rand;
-use text_io::read;
-
-// use std::fs::File;
-use std::fs;
-use std::io::Read;
 
 struct Password {
     text: String,
@@ -19,7 +14,7 @@ impl Password {
         return self.text.len()
     }
 
-    // currently returns the entropy given a
+    // currently returns the entropy given lowercase english letters
     fn stats(&self) -> f64 {
         let alph: f64 = 26.0;
         return (self.text.len() as f64) * alph.log2();
@@ -60,8 +55,7 @@ impl WordList {
 
         let mut wordCt = 3;
         // ensuring a suitable length passphrase
-        // 20 is a temp value
-        while phrase.len() < 20 {
+        while phrase.len() < 15 {
             let word = self.randWord();
             phrase += &word;
             wordCt = wordCt + 1;
@@ -84,7 +78,7 @@ impl WordList {
 
     fn new() -> WordList {
         // let mut contents = include_str!("test1.txt");
-        let mut contents = include_str!("twl06.txt");
+        let contents = include_str!("twl06.txt");
         let mut vec: Vec<String> = Vec::new();
         let mut ct: usize = 0;
         for word in contents.lines(){
@@ -102,15 +96,21 @@ impl WordList {
 }
 
 // produces a list of 10 passphrases
-fn listOfTen(corpus: WordList){
+fn listOfTen(corpus: WordList) {
     //making a list of passphrases
     let mut passes: Vec<Password> = Vec::new();
-    for _i in 0..30{
+    let mut max: usize = 0;
+    for i in 0..10{
         passes.push(corpus.genPassphrase());
+        if passes[i].len() > max {
+            max = passes[i].len();
+        }
     }
 
-    for i in 0..30{
-        println!("[{}] {}\t{}", i, passes[i].text, passes[i].stats());
+    // funky formatting for a table output
+    println!("{ul}Num | {:41}| {:18}{res}", "Passphrase" , "Entropy " , ul="\x1B[4m", res="\x1B[24m");
+    for i in 0..10{
+        println!("[{}] | {:41}| {}", i, passes[i].text, passes[i].stats());
     }
 }
 
