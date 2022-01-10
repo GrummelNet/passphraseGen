@@ -82,7 +82,7 @@ impl WordList {
 
     fn new() -> WordList {
         // let mut contents = include_str!("test1.txt");
-        let contents = include_str!("twl06.txt");
+        let contents = include_str!("dictionary.txt");
         let mut vec: Vec<String> = Vec::new();
         let mut ct: usize = 0;
         for word in contents.lines(){
@@ -115,7 +115,7 @@ fn listOfTen(corpus: WordList) {
     println!("{ul}Num | {:41}| {:18}{res}", "Passphrase" , "Entropy " , ul="\x1B[4m", res="\x1B[24m");
     for i in 0..10 {
 		let stats = passes[i].stats(&corpus);
-        println!("[{}] | {:41}| {}", i, passes[i].text, stats.0); 
+        println!("[{}] | {:41}| {}", i, passes[i].text, stats.0);
     }
 }
 
